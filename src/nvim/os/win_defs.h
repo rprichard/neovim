@@ -1,6 +1,8 @@
 #ifndef NVIM_OS_WIN_DEFS_H
 #define NVIM_OS_WIN_DEFS_H
 
+// winsock2.h must be before windows.h - or so says Mingw
+#include <winsock2.h>
 #include <windows.h>
 #include <sys/stat.h>
 #include <io.h>
@@ -14,6 +16,12 @@
 
 #define TEMP_DIR_NAMES {"$TMP", "$TEMP", "$USERPROFILE", ""}
 #define TEMP_FILE_PATH_MAXLEN _MAX_PATH
+
+#ifndef LC_MESSAGES
+// FIXME(equalsraf): this is a hack - also used in ex_cmds2.c to build in
+// windows without libintl
+# define LC_MESSAGES LC_COLLATE
+#endif
 
 #define FNAME_ILLEGAL "\"*?><|"
 
@@ -41,7 +49,10 @@
 # ifndef S_IXUSR
 #  define S_IXUSR S_IEXEC
 # endif
-#endif
+# ifndef __func__
+#  define __func__ __FUNCTION__
+# endif
+#endif // _MSC_VER
 
 #ifdef _MSC_VER
 typedef SSIZE_T ssize_t;
