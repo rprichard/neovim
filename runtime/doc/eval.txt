@@ -4204,7 +4204,7 @@ jobstart({cmd}[, {opts}])				{Nvim} *jobstart()*
 		  - on_exit: exit event handler
 		  - pty: If set, the job will be connected to a new pseudo
 		    terminal, and the job streams are connected to the master
-		    file descriptor.
+		    file descriptor (only available in UNIX).
 		  - width: Width of the terminal screen(only if pty is set)
 		  - height: Height of the terminal screen(only if pty is set)
 		  - TERM: $TERM environment variable(only if pty is set)

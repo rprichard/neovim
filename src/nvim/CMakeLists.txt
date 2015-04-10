@@ -72,6 +72,10 @@ foreach(sfile ${NEOVIM_SOURCES})
   if(${f} MATCHES "^(regexp_nfa.c)$")
     list(APPEND to_remove ${sfile})
   endif()
+  # Disable pty process
+  if(NOT FEAT_PTY_PROCESS AND ${f} MATCHES "^(pty_process.c)$")
+    list(APPEND to_remove ${sfile})
+  endif()
 endforeach()
 
 list(REMOVE_ITEM NEOVIM_SOURCES ${to_remove})

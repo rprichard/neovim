@@ -58,5 +58,6 @@
 #ifdef UNIX
 # define FEAT_TERMINAL_UI
 #endif
+#cmakedefine FEAT_PTY_PROCESS
 
 #endif  // AUTO_CONFIG_H
