@@ -47,6 +47,11 @@ elseif exists('$DISPLAY') && executable('xclip')
   let s:paste['+'] = 'xclip -o -selection clipboard'
   let s:copy['*'] = 'xclip -quiet -i -selection primary'
   let s:paste['*'] = 'xclip -o -selection primary'
+elseif executable('winclip')
+  let s:copy['+'] = 'winclip -c -m'
+  let s:paste['+'] = 'winclip -p -m'
+  let s:copy['*'] = s:copy['+']
+  let s:paste['*'] = s:paste['+']
 else
   echom 'clipboard: No clipboard tool available. See :help nvim-clipboard'
   finish
