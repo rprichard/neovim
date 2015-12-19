@@ -398,6 +398,15 @@ install_helper(
   FILES ${MANPAGES}
   DESTINATION ${CMAKE_INSTALL_MANDIR}/man1)
 
+if(WIN32)
+  # Install 3rd party tools
+  foreach(BIN diff.exe libiconv2.dll libintl3.dll winclip.exe)
+    install_helper(
+      PROGRAMS ${DEPS_PREFIX}/bin/${BIN}
+      DESTINATION ${CMAKE_INSTALL_BINDIR})
+  endforeach()
+endif()
+
 # MIN_LOG_LEVEL for log.h
 if(DEFINED MIN_LOG_LEVEL)
   if(NOT MIN_LOG_LEVEL MATCHES "^[0-3]$")
