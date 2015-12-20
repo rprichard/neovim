@@ -135,6 +135,7 @@ int main(int argc, char **argv)
   uv_tty_set_mode(&tty, UV_TTY_MODE_RAW);
   tty.data = &interrupted;
   uv_read_start((uv_stream_t *)&tty, alloc_cb, read_cb);
+#ifndef WIN32
   struct sigaction sa;
   sigemptyset(&sa.sa_mask);
   sa.sa_flags = 0;
@@ -144,6 +145,7 @@ int main(int argc, char **argv)
   // uv_signal_init(uv_default_loop(), &sigwinch_watcher);
   // sigwinch_watcher.data = &tty;
   // uv_signal_start(&sigwinch_watcher, sigwinch_cb, SIGWINCH);
+#endif
   uv_run(uv_default_loop(), UV_RUN_DEFAULT);
 
   return 0;
