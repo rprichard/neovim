@@ -1,5 +1,6 @@
 local helpers = require('test.functional.helpers')
 local clear, nvim, eq = helpers.clear, helpers.nvim, helpers.eq
+local ffi = helpers.ffi
 
 describe('TabNewEntered', function()
     describe('au TabNewEntered', function()
@@ -14,6 +15,9 @@ describe('TabNewEntered', function()
         describe('with FILE as <afile>', function()
             it('matches when opening a new tab for FILE', function()
                 local tmp_path = nvim('eval', 'tempname()')
+		if ffi.os == 'Windows' then
+                  tmp_path = nvim('call_function', 'fnamemodify', { tmp_path, ':~'})
+                end
                 nvim('command', 'au! TabNewEntered '..tmp_path..' echom "tabnewentered:match"')
                 eq("\n\""..tmp_path.."\" [New File]\ntabnewentered:4:4\ntabnewentered:match", nvim('command_output', 'tabnew '..tmp_path))
            end)
