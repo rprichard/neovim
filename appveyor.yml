@@ -23,6 +23,11 @@ build_script:
 - cmake --build .
 - bin\nvim.exe --version
 - cmake --build . --target install -- /p:Configuration=Release
+- if DEFINED BUILD_NUPKG nuget pack -Version 0.0.0-pr810 ..\contrib\neovim.nuspec
+nuget:
+  project_feed: true
 artifacts:
 - path: INSTALL
   name: Neovim
+- path: 'build/*.nupkg'
+  name: nupkgs
