@@ -5,6 +5,8 @@ configuration:
   - Release
 environment:
   GYP_MSVS_VERSION: 2015
+  # The default cpack in the PATH is not CMake
+  CPACK: C:\Program Files (x86)\CMake\bin\cpack.exe
   matrix:
   - GENERATOR: Visual Studio 14 Win64
     DEPS_PATH: deps64
@@ -27,10 +29,12 @@ build_script:
 - bin\nvim.exe --version
 - cmake --build . --target install --config %CONFIGURATION%
 - if DEFINED BUILD_NUPKG nuget pack -Version 0.0.0-pr810 ..\contrib\neovim.nuspec
+- '"%CPACK%" -G NSIS -C %CONFIGURATION%'
+- '"%CPACK%" -G ZIP -C %CONFIGURATION%'
 nuget:
   project_feed: true
 artifacts:
-- path: INSTALL
-  name: Neovim
 - path: 'build/*.nupkg'
   name: nupkgs
+- path: build/Neovim.zip
+- path: build/Neovim.exe
