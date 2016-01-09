@@ -381,7 +381,7 @@ endif()
 message(STATUS "Using the Lua interpreter ${LUA_PRG}.")
 
 # Setup busted.
-find_program(BUSTED_PRG busted)
+find_program(BUSTED_PRG NAMES busted busted.bat)
 if(NOT BUSTED_OUTPUT_TYPE)
   set(BUSTED_OUTPUT_TYPE "utfTerminal")
 endif()
