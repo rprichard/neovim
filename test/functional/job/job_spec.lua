@@ -52,7 +52,11 @@ describe('jobs', function()
   end)
 
   it('invokes callbacks when the job writes and exits', function()
-    nvim('command', "call jobstart(['echo'], g:job_opts)")
+    if ffi.os == 'Windows' then
+      nvim('command', "call jobstart('echo. > nul', g:job_opts)")
+    else
+      nvim('command', "call jobstart(['echo'], g:job_opts)")
+    end
     eq({'notification', 'stdout', {0, {'', ''}}}, next_msg())
     eq({'notification', 'exit', {0, 0}}, next_msg())
   end)
@@ -181,7 +185,11 @@ describe('jobs', function()
 
   it('can pass user data to the callback', function()
     nvim('command', 'let g:job_opts.user = {"n": 5, "s": "str", "l": [1]}')
-    nvim('command', "call jobstart(['echo'], g:job_opts)")
+    if ffi.os == 'Windows' then
+      nvim('command', "call jobstart('exit 0', g:job_opts)")
+    else
+      nvim('command', "call jobstart(['echo'], g:job_opts)")
+    end
     local data = {n = 5, s = 'str', l = {1}}
     eq({'notification', 'stdout', {data, {'', ''}}}, next_msg())
     eq({'notification', 'exit', {data, 0}}, next_msg())
@@ -189,7 +197,11 @@ describe('jobs', function()
 
   it('can omit options', function()
     neq(0, nvim('eval', 'delete(".Xtestjob")'))
-    nvim('command', "call jobstart(['touch', '.Xtestjob'])")
+    if ffi.os == 'Windows' then
+      nvim('command', "call jobstart('echo. > .Xtestjob')")
+    else
+      nvim('command', "call jobstart(['touch', '.Xtestjob'])")
+    end
     nvim('command', "sleep 100m")
     eq(0, nvim('eval', 'delete(".Xtestjob")'))
   end)
@@ -198,7 +210,11 @@ describe('jobs', function()
     nvim('command', 'unlet g:job_opts.on_stdout')
     nvim('command', 'unlet g:job_opts.on_stderr')
     nvim('command', 'let g:job_opts.user = 5')
-    nvim('command', "call jobstart(['echo'], g:job_opts)")
+    if ffi.os == 'Windows' then
+      nvim('command', "call jobstart('exit 0', g:job_opts)")
+    else
+      nvim('command', "call jobstart(['echo'], g:job_opts)")
+    end
     eq({'notification', 'exit', {5, 0}}, next_msg())
   end)
 
