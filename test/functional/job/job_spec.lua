@@ -7,6 +7,7 @@ local clear, eq, eval, execute, feed, insert, neq, next_msg, nvim,
   helpers.nvim_dir, helpers.ok, helpers.source,
   helpers.write_file
 local Screen = require('test.functional.ui.screen')
+local ffi = require('ffi')
 
 
 describe('jobs', function()
@@ -32,8 +33,15 @@ describe('jobs', function()
 
   it('uses &shell and &shellcmdflag if passed a string', function()
     nvim('command', "let $VAR = 'abc'")
-    nvim('command', "let j = jobstart('echo $VAR', g:job_opts)")
-    eq({'notification', 'stdout', {0, {'abc', ''}}}, next_msg())
+    local expected_out
+    if ffi.os == 'Windows' then
+      nvim('command', "let j = jobstart('echo %VAR%', g:job_opts)")
+      expected_out = 'abc\r'
+    else
+      nvim('command', "let j = jobstart('echo $VAR', g:job_opts)")
+      expected_out = 'abc'
+    end
+    eq({'notification', 'stdout', {0, {expected_out, ''}}}, next_msg())
     eq({'notification', 'exit', {0, 0}}, next_msg())
   end)
 
@@ -255,6 +263,10 @@ describe('jobs', function()
 
   describe('jobwait', function()
     it('returns a list of status codes', function()
+      if ffi.os == 'Windows' then
+        pending('Windows does not have the sleep command')
+	return
+      end
       source([[
       call rpcnotify(g:channel, 'wait', jobwait([
       \  jobstart([&sh, &shellcmdflag, 'sleep 0.10; exit 4']),
@@ -267,6 +279,10 @@ describe('jobs', function()
     end)
 
     it('will run callbacks while waiting', function()
+      if ffi.os == 'Windows' then
+        pending('Windows does not have the sleep command')
+	return
+      end
       source([[
       let g:dict = {'id': 10}
       let g:exits = 0
@@ -288,6 +304,10 @@ describe('jobs', function()
     end)
 
     it('will return status codes in the order of passed ids', function()
+      if ffi.os == 'Windows' then
+        pending('Windows does not have the sleep command')
+	return
+      end
       source([[
       call rpcnotify(g:channel, 'wait', jobwait([
       \  jobstart([&sh, &shellcmdflag, 'sleep 0.070; exit 4']),
@@ -300,6 +320,10 @@ describe('jobs', function()
     end)
 
     it('will return -3 for invalid job ids', function()
+      if ffi.os == 'Windows' then
+        pending('Windows does not have the sleep command')
+	return
+      end
       source([[
       call rpcnotify(g:channel, 'wait', jobwait([
       \  -10,
@@ -319,6 +343,10 @@ describe('jobs', function()
     end)
 
     it('can be called recursively', function()
+      if ffi.os == 'Windows' then
+        pending('Windows does not have the cat command')
+	return
+      end
       source([[
       let g:opts = {}
       let g:counter = 0
@@ -366,6 +394,10 @@ describe('jobs', function()
 
     describe('with timeout argument', function()
       it('will return -1 if the wait timed out', function()
+        if ffi.os == 'Windows' then
+          pending('Windows does not have the sleep command')
+          return
+        end
         source([[
         call rpcnotify(g:channel, 'wait', jobwait([
         \  jobstart([&sh, &shellcmdflag, 'exit 4']),
@@ -398,6 +430,10 @@ describe('jobs', function()
   end)
 
   describe('running tty-test program', function()
+    if ffi.os == 'Windows' then
+      pending('tty-test is not supported in Windows')
+      return
+    end
     local function next_chunk()
       local rv
       while true do
