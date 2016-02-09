@@ -249,7 +249,7 @@ int main(int argc, char **argv)
   command_line_scan(&params);
 
   if (GARGCOUNT > 0)
-    fname = get_fname(&params);
+    fname = get_fname(&params, cwd);
 
   TIME_MSG("expanding arguments");
 
@@ -1183,7 +1183,7 @@ static void check_and_set_isatty(mparm_T *paramp)
 /*
  * Get filename from command line, given that there is one.
  */
-static char_u *get_fname(mparm_T *parmp)
+static char_u *get_fname(mparm_T *parmp, char_u *cwd)
 {
 #if !defined(UNIX)
   /*
