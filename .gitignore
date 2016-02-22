@@ -3,6 +3,9 @@
 /dist/
 /.deps/
 /tmp/
+/deps32/
+/deps64/
+/INSTALL/
 
 *.rej
 *.orig
