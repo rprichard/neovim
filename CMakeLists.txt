@@ -421,12 +421,6 @@ else()
   message(STATUS "Log level not specified, defaulting to INFO(1)")
 endif()
 
-if(NOT DEFINED FEAT_PTY_PROCESS)
-  if(NOT WIN32)
-    set(FEAT_PTY_PROCESS ON)
-  endif()
-endif()
-
 # Go down the tree.
 
 add_subdirectory(src/nvim)

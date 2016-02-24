@@ -73,7 +73,7 @@ foreach(sfile ${NEOVIM_SOURCES})
     list(APPEND to_remove ${sfile})
   endif()
   # Disable pty process
-  if(NOT FEAT_PTY_PROCESS AND ${f} MATCHES "^(pty_process.c)$")
+  if(WIN32 AND ${f} MATCHES "^(pty_process_unix.c)$")
     list(APPEND to_remove ${sfile})
   endif()
 endforeach()

@@ -26,11 +26,11 @@
 #include "nvim/event/rstream.h"
 #include "nvim/event/wstream.h"
 #include "nvim/event/process.h"
-#include "nvim/event/pty_process.h"
+#include "nvim/event/pty_process_unix.h"
 #include "nvim/log.h"
 
 #ifdef INCLUDE_GENERATED_DECLARATIONS
-# include "event/pty_process.c.generated.h"
+# include "event/pty_process_unix.c.generated.h"
 #endif
 
 bool pty_process_spawn(PtyProcess *ptyproc)
