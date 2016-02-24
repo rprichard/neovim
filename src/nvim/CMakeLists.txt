@@ -235,6 +235,10 @@ if(Iconv_LIBRARIES)
   list(APPEND NVIM_LINK_LIBRARIES ${Iconv_LIBRARIES})
 endif()
 
+if(WIN32)
+  list(APPEND NVIM_LINK_LIBRARIES ${WINPTY_LIBRARIES})
+endif()
+
 # Put these last on the link line, since multiple things may depend on them.
 list(APPEND NVIM_LINK_LIBRARIES
   ${LIBUV_LIBRARIES}
@@ -267,7 +271,7 @@ install_helper(TARGETS nvim)
 
 if(MSVC)
   # Bundle dependency DLLs with nvim.exe
-  foreach(DLL ${MSGPACK_DLL} ${LIBUV_DLL})
+  foreach(DLL ${MSGPACK_DLL} ${LIBUV_DLL} ${WINPTY_BINARIES})
     get_filename_component(_name ${DLL} NAME_WE)
     set(_name "dll_${_name}")
     # Run after nvim, otherwise MSBuild complains it can't create bin/
